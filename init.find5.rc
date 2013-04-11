@@ -17,7 +17,13 @@
 import init.find5.usb.rc
 
 on early-init
-    mount debugfs debugfs /sys/kernel/debug
+    mkdir /system
+    mount ext4 /dev/block/mmcblk0p19 /system wait rw data=ordered noauto_da_alloc
+    mkdir /data
+    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/userdata /data wait rw nosuid
+    mkdir /cache
+    mount ext4 /dev/block/platform/msm_sdcc.1/by-name/cache /cache wait rw nosuid
+    mkdir /system/etc/debug_0
 
 on init
     # See storage config details at http://source.android.com/tech/storage/
@@ -39,22 +45,16 @@ on init
     mkdir /persist 0771 system system
     mkdir /firmware 0771 system system
 
-on init
-    # Setup custom emergency number list based on
-    # the MCC. This is needed by RIL.
-    setprop persist.radio.custom_ecc "1"
-    setprop persist.radio.custom_ecc_mcc "{234,235,424,426,427,430,431:999},{334:060,066},{422:9999},{730:133}"
-    setprop persist.radio.custom_ecc_mcc_ex "{450:111,112,113,119,122,125,127},{724:190}"
-    setprop persist.radio.custom_ecc_voice "{515:117},{452:113,114,115}"
-    setprop persist.radio.custom_ecc_hard "911,*911,#911,112,999,000,08,118,120,122,110,119,995,111,113,125,127,133"
-
 on fs
-    mount_all ./fstab.find5
-    setprop ro.crypto.fuse_sdcard true
+#    mount_all ./fstab.find5
+#    setprop ro.crypto.fuse_sdcard true
+    mkdir /system/etc/debug_1
+    mkdir /data/debug_2
 
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
+    mkdir /system/etc/debug_3
 
 on boot
     #Create QMUX deamon socket area
@@ -136,25 +136,8 @@ on boot
 
 # msm specific files that need to be created on /data
 on post-fs-data
+    mkdir /system/etc/debug_4
     mkdir /data/media 0770 media_rw media_rw
-
-    # Create the directories used by the Wireless subsystem
-    mkdir /data/misc/wifi 0770 wifi wifi
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
-    mkdir /data/misc/dhcp 0770 dhcp dhcp
-# to observe dnsmasq.leases file for dhcp information of soft ap.
-    chown dhcp system /data/misc/dhcp
-
-    write /dev/wcnss_wlan 1
-    write /sys/module/wcnss_ssr_8960/parameters/enable_riva_ssr 1
-
-    # Create directory used by audio subsystem
-    mkdir /data/misc/audio 0770 audio audio
-
-    # Workaround for conn_init not copying the updated firmware
-    rm /data/misc/wifi/WCNSS_qcom_cfg.ini
-    rm /data/misc/wifi/WCNSS_qcom_wlan_nv.bin
 
     # Mounting of persist is moved to 'on emmc-fs' and 'on fs' sections
     # We chown/chmod /persist again so because mount is run as root + defaults
@@ -205,35 +188,7 @@ on post-fs-data
     # LED On/Off synchronization
     chown system system /sys/class/leds/red/device/lock
 
-    # communicate with mpdecision and thermald
-    mkdir /dev/socket/mpdecision 0770 system system
-    chmod 2770 /dev/socket/mpdecision
-
-    # adjust vibrator amplitude
-    write /sys/class/timed_output/vibrator/amp 70
-
-    # Enable Power modes and set the CPU Freq Sampling rates
-    write /sys/module/rpm_resources/enable_low_power/L2_cache 1
-    write /sys/module/rpm_resources/enable_low_power/pxo 1
-    write /sys/module/rpm_resources/enable_low_power/vdd_dig 1
-    write /sys/module/rpm_resources/enable_low_power/vdd_mem 1
-    write /sys/module/pm_8x60/modes/cpu0/power_collapse/suspend_enabled 1
-    write /sys/module/pm_8x60/modes/cpu1/power_collapse/suspend_enabled 1
-    write /sys/module/pm_8x60/modes/cpu2/power_collapse/suspend_enabled 1
-    write /sys/module/pm_8x60/modes/cpu3/power_collapse/suspend_enabled 1
-    write /sys/module/pm_8x60/modes/cpu0/power_collapse/idle_enabled 1
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "ondemand"
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "ondemand"
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "ondemand"
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "ondemand"
-    write /sys/devices/system/cpu/cpufreq/ondemand/up_threshold 90
-    write /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate 50000
-    write /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy 1
-    write /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor 4
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 384000
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq 384000
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq 384000
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq 384000
+    mkdir /system/etc/debug_6
 
 on charger
     # Enable Power modes and set the CPU Freq Sampling rates

@@ -138,6 +138,15 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	persist.audio.lowlatency.rec=false \
 	af.resampler.quality=4
 
+# Debugging
+PRODUCT_PROPERTY_OVERRIDES += \
+	ro.secure=0 \
+	service.adb.enable=1 \
+	sys.usb.config=adb \
+	ro.debuggable=1 \
+	persist.service.adb.enable=1 \
+	ro.adb.secure=0
+
 
 # Do not power down SIM card when modem is sent to Low Power Mode.
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -164,10 +173,10 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
 	libgenlock \
-	liboverlay \
-	hwcomposer.msm8960 \
-	gralloc.msm8960 \
-	copybit.msm8960
+#	liboverlay
+#	hwcomposer.msm8960 \
+#	gralloc.msm8960 \
+#	copybit.msm8960
 
 PRODUCT_PACKAGES += \
 	alsa.msm8960 \
