@@ -173,10 +173,10 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
 	libgenlock \
-#	liboverlay
-#	hwcomposer.msm8960 \
-#	gralloc.msm8960 \
-#	copybit.msm8960
+	liboverlay \
+	hwcomposer.msm8960 \
+	gralloc.msm8960 \
+	copybit.msm8960
 
 PRODUCT_PACKAGES += \
 	alsa.msm8960 \

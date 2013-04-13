@@ -108,6 +108,8 @@ TARGET_RELEASETOOLS_EXTENSIONS := device/oppo/find5
 
 BOARD_CHARGER_ENABLE_SUSPEND := true
 
+TARGET_QCOM_DISPLAY_VARIANT := caf
+
 BOARD_HAVE_LOW_LATENCY_AUDIO := true
 
 -include vendor/oppo/find5/BoardConfigVendor.mk
